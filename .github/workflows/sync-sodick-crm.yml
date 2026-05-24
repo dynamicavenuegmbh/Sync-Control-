@@ -1,0 +1,26 @@
+name: Sync Sodick-CRM from SRC
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Daily at 02:15 UTC
+    - cron: "15 2 * * *"
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Mirror SRC to DST
+        env:
+          SRC_PAT: ${{ secrets.SRC_PAT }}
+          DST_PAT: ${{ secrets.DST_PAT }}
+        run: |
+          set -euo pipefail
+
+          git clone --mirror "https://x-access-token:${SRC_PAT}@github.com/SDGD365/Sodick-CRM.git" repo.git
+          cd repo.git
+
+          git remote set-url --push origin "https://x-access-token:${DST_PAT}@github.com/dynamicavenuegmbh/Sodick-CRM.git"
+
+          git push --mirror
