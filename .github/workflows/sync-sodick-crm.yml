@@ -13,14 +13,14 @@ jobs:
     steps:
       - name: Mirror SRC to DST
         env:
-          SRC_PAT: ${{ secrets.SRC_PAT }}
-          DST_PAT: ${{ secrets.DST_PAT }}
+          SRC_PAT: ${{ secrets.SRC_PAT_DA }}
+          DST_PAT: ${{ secrets.DST_PAT_DA }}
         run: |
           set -euo pipefail
 
-          git clone --mirror "https://x-access-token:${SRC_PAT}@github.com/SDGD365/Sodick-CRM.git" repo.git
+          git clone --mirror "https://x-access-token:${SRC_PAT_DA}@github.com/SDGD365/Sodick-CRM.git" repo.git
           cd repo.git
 
-          git remote set-url --push origin "https://x-access-token:${DST_PAT}@github.com/dynamicavenuegmbh/Sodick-CRM.git"
+          git remote set-url --push origin "https://x-access-token:${DST_PAT_DA}@github.com/dynamicavenuegmbh/Sodick-CRM.git"
 
           git push --mirror
