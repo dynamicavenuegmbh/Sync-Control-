@@ -13,8 +13,8 @@ jobs:
     steps:
       - name: Mirror SRC to DST
         env:
-          SRC_PAT: ${{ secrets.SRC_PAT_DA }}
-          DST_PAT: ${{ secrets.DST_PAT_DA }}
+          SRC_PAT_DA: ${{ secrets.SRC_PAT_DA }}
+          DST_PAT_DA: ${{ secrets.DST_PAT_DA }}
         run: |
           set -euo pipefail
 
