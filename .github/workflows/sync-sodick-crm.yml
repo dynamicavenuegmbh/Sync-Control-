@@ -11,16 +11,31 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Mirror SRC to DST
+      - name: Sync SRC to DST without .github
         env:
           SRC_PAT_DA: ${{ secrets.SRC_PAT_DA }}
           DST_PAT_DA: ${{ secrets.DST_PAT_DA }}
         run: |
           set -euo pipefail
 
-          git clone --mirror "https://x-access-token:${SRC_PAT_DA}@github.com/SDGD365/Sodick-CRM.git" repo.git
-          cd repo.git
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
 
-          git remote set-url --push origin "https://x-access-token:${DST_PAT_DA}@github.com/dynamicavenuegmbh/Sodick-CRM.git"
+          git clone "https://x-access-token:${SRC_PAT_DA}@github.com/SDGD365/Sodick-CRM.git" src
+          git clone "https://x-access-token:${DST_PAT_DA}@github.com/dynamicavenuegmbh/Sodick-CRM.git" dst
 
-          git push --mirror
+          rsync -av --delete \
+            --exclude=".git/" \
+            --exclude=".github/" \
+            src/ dst/
+
+          cd dst
+
+          if git diff --quiet && git diff --cached --quiet; then
+            echo "No changes to sync."
+            exit 0
+          fi
+
+          git add -A
+          git commit -m "Sync from SDGD365/Sodick-CRM"
+          git push origin main
