@@ -1,41 +1,41 @@
-name: Sync Sodick-CRM from SRC
+# name: Sync Sodick-CRM from SRC
 
-on:
-  workflow_dispatch:
-  schedule:
+# on:
+#  workflow_dispatch:
+#  schedule:
     # Daily at 02:15 UTC
-    - cron: "15 2 * * *"
+#    - cron: "15 2 * * *"
 
-jobs:
-  sync:
-    runs-on: ubuntu-latest
+# jobs:
+# sync:
+#    runs-on: ubuntu-latest
 
-    steps:
-      - name: Sync SRC to DST without .github
-        env:
-          SRC_PAT_DA: ${{ secrets.SRC_PAT_DA }}
-          DST_PAT_DA: ${{ secrets.DST_PAT_DA }}
-        run: |
-          set -euo pipefail
+#    steps:
+#      - name: Sync SRC to DST without .github
+#        env:
+#          SRC_PAT_DA: ${{ secrets.SRC_PAT_DA }}
+#          DST_PAT_DA: ${{ secrets.DST_PAT_DA }}
+#        run: |
+#          set -euo pipefail
 
-          git config --global user.name "github-actions"
-          git config --global user.email "github-actions@github.com"
+#          git config --global user.name "github-actions"
+#          git config --global user.email "github-actions@github.com"
 
-          git clone "https://x-access-token:${SRC_PAT_DA}@github.com/SDGD365/Sodick-CRM.git" src
-          git clone "https://x-access-token:${DST_PAT_DA}@github.com/dynamicavenuegmbh/Sodick-CRM.git" dst
+#          git clone "https://x-access-token:${SRC_PAT_DA}@github.com/SDGD365/Sodick-CRM.git" src
+#          git clone "https://x-access-token:${DST_PAT_DA}@github.com/dynamicavenuegmbh/Sodick-CRM.git" dst
 
-          rsync -av --delete \
-            --exclude=".git/" \
-            --exclude=".github/" \
-            src/ dst/
+#          rsync -av --delete \
+#            --exclude=".git/" \
+#            --exclude=".github/" \
+#            src/ dst/
 
-          cd dst
+#          cd dst
 
-          if git diff --quiet && git diff --cached --quiet; then
-            echo "No changes to sync."
-            exit 0
-          fi
+#          if git diff --quiet && git diff --cached --quiet; then
+#            echo "No changes to sync."
+#            exit 0
+#          fi
 
-          git add -A
-          git commit -m "Sync from SDGD365/Sodick-CRM"
-          git push origin main
+#          git add -A
+#          git commit -m "Sync from SDGD365/Sodick-CRM"
+#          git push origin main
